@@ -4,13 +4,13 @@ import { AppBar, Toolbar, Typography, Box } from "@mui/material";
 function Header() {
   return (
     <AppBar
-      position="fixed"
+      position="relative"
       sx={{
         top: 20,
         left: "50%",
         transform: "translateX(-50%)",
-        width: "80%", // Ustawienie szerokości AppBar na 80% ekranu
-        maxWidth: "1150px", // Ograniczenie maksymalnej szerokości AppBar
+        width: "100%",
+        maxWidth: "1150px",
         background: "linear-gradient(to right, #add8e6, #00008b)",
         color: "white",
       }}

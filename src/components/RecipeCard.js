@@ -6,19 +6,13 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
+import "../App.css";
 
-//Komponent RecipeCard przyjmuje propsy recipe i onClick
 function RecipeCard({ recipe, onClick }) {
   return (
-    //Karta wyświetlająca pojedynczy przepis
-    <Card onClick={onClick}>
+    <Card className="recipe-card" onClick={onClick}>
       <CardActionArea>
-        <CardMedia
-          component="img"
-          height="200"
-          image={recipe.image}
-          alt={recipe.label}
-        />
+        <CardMedia component="img" image={recipe.image} alt={recipe.label} />
         <CardContent>
           <Typography variant="h6" gutterBottom>
             {recipe.label}
