@@ -8,5 +8,9 @@ export default [
     languageOptions: { globals: globals.browser },
     ...pluginJsConfigs.recommended,
     ...fixupConfigRules(pluginReactConfig),
+    rules: {
+      'no-unused-vars': 'off', // Lub 'off', jeśli nie chcesz, aby ta reguła była aktywna
+      // Dodaj inne reguły, które chcesz skonfigurować
+    },
   },
 ];

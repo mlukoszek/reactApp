@@ -1,9 +1,15 @@
-.App {
-  text-align: center;
-  background-color: rgb(185, 180, 180);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.appContainer {
+  background-color: #0e0eb9;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.question-text {
+  font-weight: bold;
+}
+
+.answer-text {
+  margin-top: 8px;
 }
 
 .App-header {
@@ -19,17 +25,10 @@
 .App-header > * {
   margin: 10px 0;
 }
-.App-header > .MuiTextField-root {
-  width: 80%;
-}
 
 .App-link {
   color: #61dafb;
 }
-
-.Sub-title {
-  font-Size: '16px'; 
-  font-weight: 'normal';}
 
 .recipe-card {    
   height: 350px;

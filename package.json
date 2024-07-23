@@ -16,7 +16,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scriptys eject"
+    "eject": "react-scr iptys eject"
   },
   "eslintConfig": {
     "extends": [
