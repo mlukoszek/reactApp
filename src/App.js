@@ -1,49 +1,50 @@
 import React, { useState, useEffect } from "react";
-import { Container, Box, Button } from "@mui/material";
+import { Container } from "@mui/material";
 import ColorTabs from "./components/ColorTabs";
-import QuestionCard from "./components/QuestionCard";
 import Login from "./components/Login";
+import Cookies from "js-cookie";
 
 import "./App.css";
 
 function App() {
-  const [token, setToken] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Ustawia token po załadowaniu komponentu
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      setToken(storedToken);
-    }
+    // Sprawdzanie statusu logowania z ciasteczek
+    const loginStatus = Cookies.get("loginStatus") === "true";
+    setIsAuthenticated(loginStatus);
   }, []);
 
+  // Obsługuje sukces logowania
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
   // Obsługuje wylogowanie
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to logout");
+      }
+      Cookies.remove("loginStatus");
+      setIsAuthenticated(false);
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
   };
 
   return (
     <Container className="appContainer">
-      {token ? (
+      {isAuthenticated ? (
         <>
-          <ColorTabs />
-          <Box mt={2}>
-            <QuestionCard token={token} />
-            {/* Przekazujemy token do QuestionCard */}
-          </Box>
-          <Box textAlign="center" mt={2}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleLogout}
-            >
-              Wyloguj
-            </Button>
-          </Box>
+          <ColorTabs onLogout={handleLogout} />
         </>
       ) : (
-        <Login setToken={setToken} />
+        <Login onLoginSuccess={handleLogin} />
       )}
     </Container>
   );
