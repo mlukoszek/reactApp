@@ -11,8 +11,10 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Cookies from "js-cookie";
-import QuestionCard from "./QuestionCard"; // Import komponentu QuestionCard
-import AdminPanel from "./AdminPanel"; // Import nowego komponentu AdminPanel
+import QuestionCard from "./QuestionCard";
+import AdminPanel from "./AdminPanel";
+import ProgressTable from "./ProgressTable";
+import Ranking from "./Ranking";
 
 const theme = createTheme({
   components: {
@@ -43,20 +45,20 @@ const theme = createTheme({
 });
 
 function ColorTabs() {
-  const [value, setValue] = useState("none"); // Domyślna wartość "none"
-  const [questionData, setQuestionData] = useState(null); // Stan na pytanie
+  const [value, setValue] = useState("none");
+  const [questionData, setQuestionData] = useState(null);
 
   useEffect(() => {
     const loginStatus = Cookies.get("loginStatus");
     if (loginStatus === "true") {
-      setValue("none"); // Ustawia domyślną zakładkę na "none" po zalogowaniu
+      setValue("none");
     }
   }, []);
 
   const handleNewGame = async () => {
     try {
       const response = await fetch(
-        "http://localhost:8080/api/drawQuestion?difficulty=0", // Pierwsze pytanie z trudnością 0
+        "http://localhost:8080/api/drawQuestion?difficulty=0",
         {
           method: "POST",
           headers: {
@@ -69,8 +71,7 @@ function ColorTabs() {
         throw new Error(`Failed to fetch question: ${response.statusText}`);
       }
       const data = await response.json();
-      setQuestionData(data); // Ustawienie pytania w stanie
-      setValue("one"); // Przejdź do zakładki "Nowa gra"
+      setQuestionData(data);
     } catch (error) {
       console.error("Error fetching question:", error);
     }
@@ -79,9 +80,9 @@ function ColorTabs() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
     if (newValue === "one") {
-      handleNewGame(); // Pobierz pytanie, gdy zakładka "Nowa gra" jest wybrana
+      handleNewGame();
     } else if (newValue === "six") {
-      handleLogout(); // Wyloguj, gdy zakładka "Wyloguj" jest wybrana
+      handleLogout();
     }
   };
 
@@ -95,8 +96,8 @@ function ColorTabs() {
         throw new Error("Failed to logout");
       }
       Cookies.remove("loginStatus");
-      setQuestionData(null); // Resetuje pytanie po wylogowaniu
-      setValue("none"); // Ustawia zakładkę na "none" po wylogowaniu
+      setQuestionData(null);
+      setValue("none");
     } catch (error) {
       console.error("Error logging out:", error);
     }
@@ -125,12 +126,52 @@ function ColorTabs() {
           <CardContent>
             {value === "none" && (
               <Box textAlign="center">
-                <Typography variant="h6">WELCOME TO MILIONERZY</Typography>
+                <Typography variant="h4" fontWeight="bold">
+                  Witaj w Milionerach Online!
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    mt: 2,
+                    pb: 10,
+                    whiteSpace: "pre-line",
+                  }}
+                >
+                  Sprawdź swoją wiedzę. Podejmij wyzwanie i wygraj wirtualny
+                  milion! Graj, ucz się i rozwijaj swoje umiejętności.
+                  Ekscytujący quiz inspirowany legendarnym teleturniejem czeka
+                  na Ciebie.Czy masz to, czego potrzeba, by zdobyć główną
+                  nagrodę?
+                </Typography>
+                <Box
+                  component="img"
+                  src="/milionerzy_studio.jpg"
+                  alt="Milionerzy Studio"
+                  sx={{
+                    width: "100%",
+                    maxWidth: 600,
+                    mt: "80px",
+                    display: "block",
+                    margin: "auto",
+                  }}
+                />
               </Box>
             )}
-            {value === "one" && questionData && (
-              <QuestionCard questionData={questionData} /> // Przekazywanie załadowanych danych do QuestionCard
+            {value === "one" && (
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                {questionData ? (
+                  <QuestionCard questionData={questionData} />
+                ) : (
+                  <Typography>Loading question...</Typography>
+                )}
+                <ProgressTable />
+              </Box>
             )}
+            {value === "two" && <Ranking />}
+            {value === "three" && (
+              <Box sx={{ display: "flex", justifyContent: "center" }}></Box>
+            )}
+            {value === "five" && <AdminPanel />}
             {value === "six" && (
               <Box textAlign="center">
                 <Button
@@ -142,10 +183,10 @@ function ColorTabs() {
                 </Button>
               </Box>
             )}
-            {/* Komponent AdminPanel dla zakładki "Admin" */}
-            {value === "five" && <AdminPanel />}
             {value !== "none" &&
               value !== "one" &&
+              value !== "two" &&
+              value !== "three" &&
               value !== "five" &&
               value !== "six" && (
                 <Typography>

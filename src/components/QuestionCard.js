@@ -47,6 +47,7 @@ const QuestionCard = ({ questionData: initialQuestionData }) => {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           userAnswer: selectedAnswer,
           correctAnswer: rightAnswer,

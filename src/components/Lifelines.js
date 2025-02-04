@@ -14,104 +14,107 @@ const Lifelines = ({
   updateQuestionData,
 }) => {
   const [audienceVotes, setAudienceVotes] = useState(null);
+  const [friendCallResponse, setFriendCallResponse] = useState(null);
 
-  // Resetowanie wyników głosowania, gdy resetVoting zmienia się na true
   useEffect(() => {
     if (resetVoting) {
       setAudienceVotes(null);
+      setFriendCallResponse(null);
     }
   }, [resetVoting]);
 
   const handleAudienceVote = async () => {
-    if (!questionId) {
-      alert("Brak pytania do głosowania.");
-      return;
-    }
+    if (!questionId || usedAudienceVote) return;
 
     try {
       const response = await fetch(
         `http://localhost:8080/api/audienceVote?questionId=${questionId}`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
         },
       );
 
-      if (!response.ok) {
-        throw new Error("Błąd podczas wysyłania głosowania publiczności.");
-      }
+      if (!response.ok)
+        throw new Error("Błąd podczas głosowania publiczności.");
 
       const data = await response.json();
-      setAudienceVotes(data); // Ustawienie wyników głosowania
-      setUsedAudienceVote(true); // Koło zostało użyte
+      setAudienceVotes(data);
+      setUsedAudienceVote(true);
     } catch (error) {
-      console.error("Wystąpił błąd:", error);
+      console.error("Błąd głosowania publiczności:", error);
     }
   };
 
   const handleFiftyFifty = async () => {
-    if (!questionId) {
-      alert("Brak pytania do aktywacji pół na pół.");
-      return;
-    }
+    if (!questionId || usedFiftyFifty) return;
 
     try {
       const response = await fetch(
         `http://localhost:8080/api/fiftyFifty?questionId=${questionId}`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
         },
       );
 
-      if (!response.ok) {
-        throw new Error("Błąd podczas aktywacji pół na pół.");
-      }
+      if (!response.ok) throw new Error("Błąd podczas pół na pół.");
       const data = await response.json();
-      setUsedFiftyFifty(true); // Koło zostało użyte
+      setUsedFiftyFifty(true);
       updateQuestionData(data);
     } catch (error) {
-      console.error("Wystąpił błąd:", error);
+      console.error("Błąd pół na pół:", error);
     }
   };
 
-  const handlePhoneAFriend = () => {
-    setUsedPhoneAFriend(true); // Koło zostało użyte
+  const handlePhoneAFriend = async () => {
+    if (!questionId || usedPhoneAFriend) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/friendCall?questionId=${questionId}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        },
+      );
+
+      if (!response.ok) throw new Error("Błąd telefonu do przyjaciela.");
+      const message = await response.text();
+      setFriendCallResponse(message);
+      setUsedPhoneAFriend(true);
+    } catch (error) {
+      console.error("Błąd telefonu do przyjaciela:", error);
+    }
   };
 
   return (
     <Box sx={{ textAlign: "center", mt: 4 }}>
-      <Typography variant="h6" gutterBottom>
-        Koła ratunkowe:
-      </Typography>
+      <Typography variant="h6">Koła ratunkowe:</Typography>
       {audienceVotes && (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="body1" gutterBottom>
-            Wyniki głosowania publiczności:
-          </Typography>
-          <Typography variant="body1" gutterBottom>
-            A: {audienceVotes.a || 0} głosów, B: {audienceVotes.b || 0} głosów,
-            C: {audienceVotes.c || 0} głosów, D: {audienceVotes.d || 0} głosów.
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="body1">
+            Głosowanie: A: {audienceVotes.a}%, B: {audienceVotes.b}%, C:
+            {audienceVotes.c}%, D: {audienceVotes.d}%.
           </Typography>
         </Box>
       )}
-
+      {friendCallResponse && (
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="body1">
+            Odpowiedź przyjaciela: {friendCallResponse}
+          </Typography>
+        </Box>
+      )}
       <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}>
         <Button
           variant="contained"
           color={color}
           onClick={handleAudienceVote}
-          disabled={usedAudienceVote} // Koło wyłączone po użyciu
+          disabled={usedAudienceVote}
         >
           <span
             style={{
@@ -121,12 +124,11 @@ const Lifelines = ({
             Głosowanie publiczności
           </span>
         </Button>
-
         <Button
           variant="contained"
           color={color}
           onClick={handleFiftyFifty}
-          disabled={usedFiftyFifty} // Koło wyłączone po użyciu
+          disabled={usedFiftyFifty}
         >
           <span
             style={{
@@ -136,12 +138,11 @@ const Lifelines = ({
             Pół na pół
           </span>
         </Button>
-
         <Button
           variant="contained"
           color={color}
           onClick={handlePhoneAFriend}
-          disabled={usedPhoneAFriend} // Koło wyłączone po użyciu
+          disabled={usedPhoneAFriend}
         >
           <span
             style={{

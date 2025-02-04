@@ -7,12 +7,15 @@ import {
   Card,
   CardContent,
   TextField,
+  Link,
 } from "@mui/material";
+import Register from "./Register"; // Importowanie komponentu rejestracji
 
 const Login = ({ onLoginSuccess }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [showRegister, setShowRegister] = useState(false); // Nowy stan do przełączania
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -33,21 +36,19 @@ const Login = ({ onLoginSuccess }) => {
       }
 
       const data = await response.json();
-      console.log("Response data:", data);
-
       if (data.message === "Login successful") {
-        if (onLoginSuccess) {
-          console.log("onLoginSuccess:", onLoginSuccess);
-          onLoginSuccess(); // Wywołanie przekazanej funkcji
-        }
+        onLoginSuccess?.();
       } else {
         throw new Error("Unexpected response content");
       }
     } catch (error) {
-      console.error("Login error:", error);
       setError("Nie udało się zalogować. Sprawdź dane logowania.");
     }
   };
+
+  if (showRegister) {
+    return <Register />; // Wyświetl komponent rejestracji
+  }
 
   return (
     <Container>
@@ -84,9 +85,31 @@ const Login = ({ onLoginSuccess }) => {
               {error && <Typography color="error">{error}</Typography>}
             </Box>
           </form>
-          <Typography mt={2}>
-            Nie masz konta? <strong>Załóż nowe konto...</strong>
-          </Typography>
+          <Box
+            display="flex"
+            justifyContent="center"
+            mt={2}
+            width="100%" // Zapewnia pełną szerokość, aby wycentrować link
+          >
+            <Typography mt={2}>
+              Nie masz konta?{" "}
+              <Link component="button" onClick={() => setShowRegister(true)}>
+                Załóż nowe konto
+              </Link>
+            </Typography>
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="center"
+            mt={2}
+            width="100%" // Zapewnia pełną szerokość, aby wycentrować obrazek
+          >
+            <img
+              src="/milionerzy_welcome.jpg"
+              alt="Welcome"
+              style={{ width: "100%", maxWidth: "400px", height: "auto" }}
+            />
+          </Box>
         </CardContent>
       </Card>
     </Container>
