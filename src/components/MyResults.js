@@ -11,7 +11,7 @@ function Ranking() {
   const [players, setPlayers] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/getTopScores", {
+    fetch("http://localhost:8080/api/getMyResults", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

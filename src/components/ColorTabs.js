@@ -15,6 +15,8 @@ import QuestionCard from "./QuestionCard";
 import AdminPanel from "./AdminPanel";
 import ProgressTable from "./ProgressTable";
 import Ranking from "./Ranking";
+import MyResults from "./MyResults";
+import MyAccount from "./MyAccount";
 
 const theme = createTheme({
   components: {
@@ -168,9 +170,8 @@ function ColorTabs() {
               </Box>
             )}
             {value === "two" && <Ranking />}
-            {value === "three" && (
-              <Box sx={{ display: "flex", justifyContent: "center" }}></Box>
-            )}
+            {value === "three" && <MyResults />}
+            {value === "four" && <MyAccount />}
             {value === "five" && <AdminPanel />}
             {value === "six" && (
               <Box textAlign="center">
