@@ -7,10 +7,26 @@ const QuestionCard = ({ questionData: initialQuestionData }) => {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [responseMessage, setResponseMessage] = useState("");
   const [resetVoting, setResetVoting] = useState(false);
+  const [prize, setPrize] = useState(null);
 
   const [usedAudienceVote, setUsedAudienceVote] = useState(false);
   const [usedFiftyFifty, setUsedFiftyFifty] = useState(false);
   const [usedPhoneAFriend, setUsedPhoneAFriend] = useState(false);
+
+  // Map of prize values for each difficulty level
+  const prizeMap = {
+    2: "1 000 zł",
+    3: "2 000 zł",
+    4: "5 000 zł",
+    5: "10 000 zł",
+    6: "15 000 zł",
+    7: "25 000 zł",
+    8: "50 000 zł",
+    9: "75 000 zł",
+    10: "150 000 zł",
+    11: "250 000 zł",
+    12: "500 000 zł",
+  };
 
   if (!questionData) {
     return (
@@ -61,6 +77,14 @@ const QuestionCard = ({ questionData: initialQuestionData }) => {
 
       const data = await response.json();
       setResponseMessage(data.result);
+
+      // Display the prize only if the answer is wrong
+      if (data.result === "Odpowiedź jest błędna") {
+        // Retrieve prize based on the difficulty level and display
+        setPrize(prizeMap[difficulty] || "Brak nagrody");
+      } else {
+        setPrize(null);
+      }
     } catch (error) {
       console.error("Wystąpił błąd:", error);
       setResponseMessage("Wystąpił błąd podczas sprawdzania odpowiedzi.");
@@ -88,6 +112,7 @@ const QuestionCard = ({ questionData: initialQuestionData }) => {
       setQuestionData(newQuestionData);
       setSelectedAnswer(null);
       setResponseMessage("");
+      setPrize(null);
       setResetVoting(true);
       setTimeout(() => setResetVoting(false), 100);
     } catch (error) {
@@ -182,6 +207,11 @@ const QuestionCard = ({ questionData: initialQuestionData }) => {
               }}
             >
               <Typography variant="h4">KONIEC GRY</Typography>
+              {prize && (
+                <Typography variant="h6">
+                  Gratulacje! Zdobyłeś {prize}.
+                </Typography>
+              )}
             </Box>
           ) : responseMessage === "Odpowiedź jest poprawna" ? (
             <Button

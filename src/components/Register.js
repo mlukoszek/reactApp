@@ -46,7 +46,9 @@ const Register = () => {
         }),
       });
       if (!response.ok) {
-        throw new Error("Rejestracja nie powiodła się");
+        throw new Error(
+          "Rejestracja nie powiodła się - użytkownik o podanej nazwie już istnieje",
+        );
       }
       setSuccess("Rejestracja zakończona sukcesem!");
     } catch (error) {

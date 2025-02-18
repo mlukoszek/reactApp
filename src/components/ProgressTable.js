@@ -42,9 +42,11 @@ const ProgressTable = ({ difficulty }) => {
                 key={level}
                 sx={{
                   bgcolor:
-                    difficulty >= levels.indexOf(level) + 1
+                    difficulty === levels.indexOf(level) + 1
                       ? "#4caf50"
-                      : "transparent",
+                      : level === 25000 // Podświetlenie 1000 zł
+                        ? "#4caf50" // Zielony
+                        : "transparent",
                 }}
               >
                 <TableCell

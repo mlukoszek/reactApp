@@ -6,6 +6,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 
 function MyAccount() {
   const [user, setUser] = useState(null);
@@ -48,29 +50,59 @@ function MyAccount() {
     return <div>Brak danych użytkownika</div>;
   }
 
+  const roleMap = {
+    ADMIN: "Administrator",
+    USER: "Zwykły użytkownik",
+  };
+
+  const handleEdit = () => {
+    alert("Edytuj dane - funkcjonalność w budowie");
+  };
+
+  const handleChangePassword = () => {
+    alert("Zmień hasło - funkcjonalność w budowie");
+  };
+
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ width: "100%" }} aria-label="user details table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Imię</TableCell>
-            <TableCell>Nazwisko</TableCell>
-            <TableCell>Username</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Data rejestracji</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell>{user.firstName}</TableCell>
-            <TableCell>{user.lastName}</TableCell>
-            <TableCell>{user.username}</TableCell>
-            <TableCell>{user.email}</TableCell>
-            <TableCell>{user.registrationDate}</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <TableContainer component={Paper}>
+        <Table sx={{ width: "100%" }} aria-label="user details table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Imię</TableCell>
+              <TableCell>Nazwisko</TableCell>
+              <TableCell>Username</TableCell>
+              <TableCell>Wiek</TableCell>
+              <TableCell>Typ konta</TableCell>
+              <TableCell>Data rejestracji</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            <TableRow>
+              <TableCell>{user.firstName}</TableCell>
+              <TableCell>{user.lastName}</TableCell>
+              <TableCell>{user.username}</TableCell>
+              <TableCell>{user.age}</TableCell>
+              <TableCell>{roleMap[user.role] || "Nieznana rola"}</TableCell>
+              <TableCell>{user.registrationDate}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <Stack direction="row" spacing={2} sx={{ marginTop: 2 }}>
+        <Button variant="contained" color="primary" onClick={handleEdit}>
+          Edytuj dane
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleChangePassword}
+        >
+          Zmień hasło
+        </Button>
+      </Stack>
+    </>
   );
 }
 

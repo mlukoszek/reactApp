@@ -82,6 +82,8 @@ function ColorTabs() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
     if (newValue === "one") {
+      setValue("");
+      setTimeout(() => setValue("one"), 0);
       handleNewGame();
     } else if (newValue === "six") {
       handleLogout();
@@ -188,6 +190,7 @@ function ColorTabs() {
               value !== "one" &&
               value !== "two" &&
               value !== "three" &&
+              value !== "four" &&
               value !== "five" &&
               value !== "six" && (
                 <Typography>
